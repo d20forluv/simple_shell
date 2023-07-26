@@ -52,7 +52,7 @@ int forks(char **args, char *str)
 	}
 	return (1);
 }
-i
+
 /**
  * place - print a '$ ' if in interactive mode
  *
