@@ -24,5 +24,12 @@ void frees(char **);
 char *find_path(char *s);
 char *_strcpy(char *dest, char *src);
 char *_strdup(const char *str);
+int exits(char **lineptr, size_t *n);
+int forks(char **args, char *str);
+void place(void);
+int swap(char **arg);
+void exit_bi(char *str);
+void print_env(char **environ);
+int built_in(char **args);
 
 #endif
