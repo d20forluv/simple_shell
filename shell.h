@@ -31,5 +31,8 @@ int swap(char **arg);
 void exit_bi(char *str);
 void print_env(char **environ);
 int built_in(char **args);
+char *get_path_variable();
+char *search_file_in_path(char *file_name, char *path_var);
+void free_token_array(char **tokens, int num_tokens);
 
 #endif
