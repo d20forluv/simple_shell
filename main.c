@@ -111,7 +111,7 @@ int main(int ac __attribute__((unused)), char *argv[])
 				{
 					frees(token);
 					free(lineptr);
-					exit(0);
+					exit(2);
 				}
 			}
 			else
