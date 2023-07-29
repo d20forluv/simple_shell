@@ -47,8 +47,11 @@ int builtin_handler(char **array_of_tokens)
 
 int exit_builtin(char **str)
 {
+
 	if (str[1] != NULL)
-		exit(atoi(str[1]));
+	{
+		return (2);
+	}
 	else
 		return (EXIT_CODE);
 }
@@ -75,7 +78,7 @@ int env_builtin(char **args __attribute__((unused)))
  */
 int main(int ac __attribute__((unused)), char *argv[])
 {
-	int read;
+	int read, i;
 	size_t n = 0;
 	char *lineptr = NULL, **token;
 	while (1)        
@@ -97,7 +100,14 @@ int main(int ac __attribute__((unused)), char *argv[])
 		{
 			if (is_builtin(token))
 			{
-				if (builtin_handler(token) == EXIT_CODE)
+				i = builtin_handler(token);
+				if (i == EXIT_CODE)
+				{
+					frees(token);
+					free(lineptr);
+					exit(0);
+				}
+				else if (i == 2)
 				{
 					frees(token);
 					free(lineptr);
