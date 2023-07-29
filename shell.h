@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#define EXIT_CODE 1080
 
 extern char **environ;
 /**

@@ -49,7 +49,8 @@ int exit_builtin(char **str)
 {
 	if (str[1] != NULL)
 		exit(atoi(str[1]));
-	exit(0);
+	else
+		return (EXIT_CODE);
 }
 
 int env_builtin(char **args __attribute__((unused)))
@@ -96,7 +97,12 @@ int main(int ac __attribute__((unused)), char *argv[])
 		{
 			if (is_builtin(token))
 			{
-				builtin_handler(token);
+				if (builtin_handler(token) == EXIT_CODE)
+				{
+					frees(token);
+					free(lineptr);
+					exit(0);
+				}
 			}
 			else
 			{
