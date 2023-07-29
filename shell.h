@@ -11,6 +11,18 @@
 #include <errno.h>
 
 extern char **environ;
+/**
+ * struct builtin_command - Short description
+ * @name: First member
+ * @function: Second member
+ *
+ * Description: Longer description
+ */
+struct builtin_command
+{
+        char *name;
+        int (*function)(char **array_of_tokens);
+};
 int _putchar(char c);
 int _puts(char *s);
 int _strcmp(char *s1, char *s2);
@@ -35,4 +47,6 @@ char *get_path_variable();
 char *search_file_in_path(char *file_name, char *path_var);
 void free_token_array(char **tokens, int num_tokens);
 int is_delim(char c, char *delim);
+int env_builtin(char **args __attribute__((unused)));
+int exit_builtin(char **str);
 #endif
