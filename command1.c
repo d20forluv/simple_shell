@@ -74,40 +74,59 @@ char *find_path(char *s)
  * Return: Return will return an array of pointers to each token (char**).
  * last element of the array will be set to NULL.
  */
-char **tokenizer(char *line, char *delim)
+char **tokenizer(char *str, char *d)
 {
-	char *token, **tokens;
-	int num_tokens = 0, token_size = 2;
+        int i, j, k, m, numwords = 0;
+        char **s;
 
-	if (line == NULL)
-		return (NULL);
+        if (str == NULL || str[0] == 0)
+                return (NULL);
+        if (!d)
+                d = " ";
+        for (i = 0; str[i] != '\0'; i++)
+                if (!is_delim(str[i], d) && (is_delim(str[i + 1], d) || !str[i + 1]))
+                        numwords++;
+        if (numwords == 0)
+                return (NULL);
+        s = malloc((1 + numwords) * sizeof(char *));
+        if (!s)
+                return (NULL);
+        for (i = 0, j = 0; j < numwords; j++)
+        {
+                while (is_delim(str[i], d))
+                        i++;
+                k = 0;
+                while (!is_delim(str[i + k], d) && str[i + k])
+                        k++;
+                s[j] = malloc((k + 1) * sizeof(char));
+                if (!s[j])
+                {
+                        for (k = 0; k < j; k++)
+                                free(s[k]);
+                        free(s);
+                        return (NULL);
+                }
+                for (m = 0; m < k; m++)
+                        s[j][m] = str[i++];
+                s[j][m] = 0;
+        }
+        s[j] = NULL;
+        return (s);
+}
 
-	tokens = NULL;
-	tokens = (char **)malloc(token_size * sizeof(char *));
-	if (tokens == NULL)
-	{
-		perror("malloc");
-		return (NULL);
-	}
-
-	token = strtok(line, delim);
-	while (token != NULL)
-	{
-		tokens[num_tokens++] = token;
-		if (num_tokens >= token_size)
-		{
-			token_size *= 2;
-			tokens = (char **)realloc(tokens, token_size * sizeof(char *));
-			if (tokens == NULL)
-			{
-				perror("realloc");
-				return (NULL);
-			}
-		}
-		token = strtok(NULL, delim);
-	}
-	tokens[num_tokens] = NULL;
-	return (tokens);
+/**
+ * is_delim - f...
+ * @c: ..
+ * @delim: ..
+ *
+ * Return: 1 on success, 0 on failure
+ */
+int is_delim(char c, char *delim)
+{
+        while (*delim)
+                if (*delim++ == c)
+                        return (1);
+        return (0);
 }
 
 /**

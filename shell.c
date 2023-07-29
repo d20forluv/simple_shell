@@ -97,6 +97,8 @@ void hsh(char *str)
 			frees(token);
 			continue;
 		}
+		free(lineptr);
+		frees(token);
+		lineptr = NULL;
 	}
-	frees(token);
 }
