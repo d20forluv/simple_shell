@@ -29,6 +29,7 @@ int builtin_handler(char **array_of_tokens)
 	const struct builtin_command builtins[] = {
 		{"env", env_builtin},
 		{"exit", exit_builtin},
+		{"setenv", _setenv}, 
 		{NULL, NULL}
 	};
 	if (array_of_tokens == NULL)

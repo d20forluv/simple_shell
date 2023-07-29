@@ -50,4 +50,9 @@ void free_token_array(char **tokens, int num_tokens);
 int is_delim(char c, char *delim);
 int env_builtin(char **args __attribute__((unused)));
 int exit_builtin(char **str);
+int _setenv(char **args, int overwrite);
+int env_does_not_exists(char *env_var, unsigned int envar_length,
+                unsigned int env_length);
+int _env_set_exists(char *env_var, unsigned int envar_length, const char *name,
+                int overwrite);
 #endif
