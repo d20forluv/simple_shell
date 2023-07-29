@@ -47,7 +47,8 @@ int builtin_handler(char **array_of_tokens)
 
 int exit_builtin(char **str)
 {
-	(void)str;
+	if (str[1] != NULL)
+		exit(atoi(str[1]));
 	exit(0);
 }
 
