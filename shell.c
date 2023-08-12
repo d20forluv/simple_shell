@@ -1,24 +1,29 @@
 #include "shell.h"
 
 /**
- * exit_bi - check if a string is "exit"
- * @str: string to compare
+ * exit_builtin - check if a string is "exit"
+ * @array_of_tokens: string to compare
  *
- * Return: none
+ * Return: int
  */
-void exit_bi(char *str)
+int exit_builtin(char **array_of_tokens)
 {
-	if (_strcmp(str, "exit") == 0)
-		exit(0);
+	if (array_of_tokens[1] != NULL)
+	{
+		frees(array_of_tokens);
+		exit(atoi(array_of_tokens[1]));
+	}
+	else
+		return (EXIT_CODE);
 }
 
 /**
- * print_env - print all enviroment variables, each on a new line
- * @environ: global variable environ
+ * env_builtin - print all enviroment variables, each on a new line
+ * @args: global variable environ
  *
  * Return: none
  */
-void print_env(char **environ)
+int env_builtin(char **args __attribute__((unused)))
 {
 	int i = 0;
 
@@ -28,29 +33,24 @@ void print_env(char **environ)
 		_putchar('\n');
 		i++;
 	}
+	return (0);
 }
 
 /**
- * built_in - exit if the string is "exit"
- * @args: pointer conatining the pointer to compare
+ * free_main - free array of tokens in the main function
+ * @array_of_tokens: tokenized string
+ * @input: string
  *
- * Return: 1 on success, -1 on failure
+ * Return: void
  */
-int built_in(char **args)
+void free_main(char **array_of_tokens, char *input)
 {
-	if (_strcmp(args[0], "exit") == 0)
-	{
-		exit_bi(args[0]);
-		/*frees(args);*/
-		return (1);
-	}
-	else if (_strcmp(args[0], "env") == 0)
-	{
-		print_env(environ);
-		/*frees(args);*/
-		return (1);
-	}
-	return (-1);
+	int index;
+
+	for (index = 0; array_of_tokens[index]; index++)
+		free(array_of_tokens[index]);
+	free(array_of_tokens);
+	free(input);
 }
 
 /**
@@ -61,44 +61,42 @@ int built_in(char **args)
  */
 void hsh(char *str)
 {
-	int i, s, b;
+	int status = 0;
 	size_t n = 0;
-	char *lineptr = NULL, **token = NULL;
+	char *lineptr = NULL, **tokens;
 
 	while (1)
 	{
 		place();
-		if (exits(&lineptr, &n) == -1)
+		if (getlines(&lineptr, &n) == 1)
 		{
-			exit(0);
+			if ((tokens = tokenizer(lineptr, " \n")) != NULL)
+			{
+				if (is_builtin(tokens))
+				{
+					if (builtin_handler(tokens) == EXIT_CODE)
+					{
+						free_main(tokens, lineptr);
+						exit(0);
+					}}
+				else
+				{
+					if ((status = forks(tokens, str)) == 0)
+						;
+					else
+					{
+						free_main(tokens, lineptr);
+						exit(status);
+					}}}
+			else
+				exit(status);
 		}
-		token = tokenizer(lineptr, " \n");
-		if (token[0] == NULL)
+		else
 		{
-			frees(token);
-			continue;
+			free(lineptr);
+			exit(status);
 		}
-
-		b = built_in(token);
-		if (b == 1)
-		{
-			frees(token);
-			continue;
-		}
-		s = swap(token);
-		if (s == -1)
-		{
-			frees(token);
-			continue;
-		}
-		i = forks(token, str);
-		if (i == 0)
-		{
-			frees(token);
-			continue;
-		}
-		free(lineptr);
-		frees(token);
+		free_main(tokens, lineptr);
 		lineptr = NULL;
 	}
 }

@@ -31,26 +31,40 @@ int exits(char **lineptr, size_t *n)
  */
 int forks(char **args, char *str)
 {
-	int i, status;
+	int e = 0;
+	int i, status, exit_status;
 	pid_t pid;
 
 	pid = fork();
+	e++;
 	if (pid == -1)
+	{
 		perror("fork");
+		return (-1);
+	}
 	if (pid == 0)
 	{
+		args[0] = find_path(args[0]);
 		i = execve(args[0], args, environ);
 		if (i == -1)
 		{
-			perror(str);
-			return (0);
+			dprintf(2, "%s: %d: %s: not found\n", str, e, args[0]);
+			return (-1);
 		}
 	}
 	else
 	{
 		wait(&status);
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+		if (!isatty(STDIN_FILENO))
+		{
+			if (exit_status != 0)
+				exit_status = 127;
+			return (exit_status);
+		}
 	}
-	return (1);
+	return (0);
 }
 
 /**

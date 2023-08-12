@@ -1,6 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 #include <stdio.h>
+#include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -50,9 +51,7 @@ void free_token_array(char **tokens, int num_tokens);
 int is_delim(char c, char *delim);
 int env_builtin(char **args __attribute__((unused)));
 int exit_builtin(char **str);
-int _setenv(char **args, int overwrite);
-int env_does_not_exists(char *env_var, unsigned int envar_length,
-                unsigned int env_length);
-int _env_set_exists(char *env_var, unsigned int envar_length, const char *name,
-                int overwrite);
+int getlines(char **lineptr, size_t *n);
+int is_builtin(char **array_of_tokens);
+int builtin_handler(char **array_of_tokens);
 #endif
